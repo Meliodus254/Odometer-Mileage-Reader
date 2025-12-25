@@ -1,0 +1,51 @@
+# config.yaml - CORRECTED VERSION
+web_app:
+  upload_folder: "uploads"
+  max_file_size: 16777216  # 16MB in bytes
+  host: "0.0.0.0"
+  port: 5000
+
+paths:
+  images_dir: "trodo-v01/images"
+  ground_truth: "trodo-v01/ground-truth/groundtruth.json"
+  annotations: "trodo-v01/pascal voc 1.1/Annotations"
+  models_dir: "models"
+  detection_model: "models/detection/best.pt"
+  recognition_model: "models/recognition/mileage_model.pth"
+  training_data: "mileage_training_data"
+  results: "results"
+
+classification:
+  batch_size: 32
+  epochs: 50
+  learning_rate: 0.001
+  image_size: [256, 256]
+  test_size: 0.2
+
+detection:
+  epochs: 50
+  batch_size: 16
+  img_size: 640
+  weights: "yolov8n.pt"
+
+ocr:
+  confidence_threshold: 0.7
+  min_digit_count: 3
+  max_digit_count: 8
+
+
+  training:
+  batch_size: 16
+  epochs: 50
+  learning_rate: 0.001
+  img_height: 64
+  img_width: 256
+
+recognition:
+  confidence_threshold: 0.5
+  use_backup_ocr: true
+  max_digits: 8
+
+evaluation:
+  test_split: 0.2
+  metrics: ["accuracy", "precision", "recall", "f1"]

@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Odometer Reading Results</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+        }
+        
+        .results-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            margin: 0 auto;
+            max-width: 1400px;
+            overflow: hidden;
+        }
+        
+        .header-section {
+            background: linear-gradient(135deg, var(--primary-color), #1a252f);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header-section h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .header-section .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+        
+        .success-badge {
+            background: var(--success-color);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin: 5px;
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+        }
+        
+        .warning-badge {
+            background: var(--warning-color);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin: 5px;
+            box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
+        }
+        
+        .danger-badge {
+            background: var(--danger-color);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin: 5px;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+        
+        .digit-detector-badge {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin: 5px;
+            animation: pulse 2s infinite;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .main-content {
+            padding: 40px;
+        }
+        
+        .result-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .result-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .result-card h3 {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+        
+        .confidence-bar {
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        
+        .confidence-fill {
+            height: 100%;
+            border-radius: 10px;
+            background: linear-gradient(90deg, var(--success-color), #2ecc71);
+            transition: width 1.5s ease-in-out;
+        }
+        
+        .image-section {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+        }
+        
+        .image-section img {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 1px solid #e0e0e0;
+        }
+        
+        .reading-display {
+            font-size: 4rem;
+            font-weight: 900;
+            color: var(--primary-color);
+            text-align: center;
+            margin: 30px 0;
+            font-family: 'Courier New', monospace;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .formatted-reading {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 30px 0;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+        
+        .formatted-reading h2 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+        
+        .formatted-reading .mileage {
+            font-size: 3.5rem;
+            font-weight: 900;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .stat-item {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin: 10px 0;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .icon-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .classification-icon {
+            background: rgba(52, 152, 219, 0.1);
+            color: var(--secondary-color);
+        }
+        
+        .detection-icon {
+            background: rgba(46, 204, 113, 0.1);
+            color: var(--success-color);
+        }
+        
+        .digit-icon {
+            background: rgba(255, 107, 107, 0.1);
+            color: #ff6b6b;
+        }
+        
+        .btn-custom {
+            background: linear-gradient(135deg, var(--secondary-color), #2980b9);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        
+        .btn-custom:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(52, 152, 219, 0.3);
+            color: white;
+        }
+        
+        .btn-secondary-custom {
+            background: var(--light-color);
+            color: var(--dark-color);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-secondary-custom:hover {
+            background: #d5dbdb;
+            transform: translateY(-3px);
+            color: var(--dark-color);
+        }
+        
+        .footer-section {
+            background: var(--dark-color);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-top: 5px solid var(--secondary-color);
+        }
+        
+        .pipeline-steps {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .step {
+            text-align: center;
+            position: relative;
+            min-width: 120px;
+        }
+        
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: #e0e0e0;
+            color: #999;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin: 0 auto 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .step.completed .step-number {
+            background: var(--success-color);
+            color: white;
+            box-shadow: 0 4px 10px rgba(46, 204, 113, 0.3);
+        }
+        
+        .step.active .step-number {
+            background: var(--secondary-color);
+            color: white;
+            box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+            animation: pulse 1.5s infinite;
+        }
+        
+        .step-label {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            display: none;
+        }
+        
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--secondary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-box {
+            background: #fee;
+            border-left: 5px solid var(--danger-color);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .error-box h4 {
+            color: var(--danger-color);
+            margin-bottom: 10px;
+        }
+        
+        .timestamp {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        .digit-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .digit-item {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+        
+        .digit-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        
+        .digit-item.high-confidence {
+            border-color: var(--success-color);
+            background: rgba(46, 204, 113, 0.1);
+        }
+        
+        .digit-item.medium-confidence {
+            border-color: var(--warning-color);
+            background: rgba(243, 156, 18, 0.1);
+        }
+        
+        .digit-item.low-confidence {
+            border-color: var(--danger-color);
+            background: rgba(231, 76, 60, 0.1);
+        }
+        
+        .digit-value {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .digit-confidence {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .method-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        .method-digit_detector {
+            background: rgba(255, 107, 107, 0.2);
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+        }
+        
+        .method-tesseract {
+            background: rgba(52, 152, 219, 0.2);
+            color: var(--secondary-color);
+            border: 1px solid rgba(52, 152, 219, 0.3);
+        }
+        
+        .method-contour {
+            background: rgba(155, 89, 182, 0.2);
+            color: #9b59b6;
+            border: 1px solid rgba(155, 89, 182, 0.3);
+        }
+        
+        .method-fallback {
+            background: rgba(243, 156, 18, 0.2);
+            color: var(--warning-color);
+            border: 1px solid rgba(243, 156, 18, 0.3);
+        }
+        
+        .bbox-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .bbox-item {
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .bbox-label {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .bbox-value {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .progress-thin {
+            height: 10px;
+            border-radius: 5px;
+        }
+        
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            min-width: 250px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border-radius: 10px;
+            display: none;
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 992px) {
+            .main-content {
+                padding: 20px;
+            }
+            
+            .header-section h1 {
+                font-size: 2rem;
+            }
+            
+            .reading-display {
+                font-size: 3rem;
+            }
+            
+            .formatted-reading .mileage {
+                font-size: 2.5rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .pipeline-steps {
+                gap: 15px;
+            }
+            
+            .step {
+                min-width: 100px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .pipeline-steps {
+                flex-direction: column;
+                gap: 15px;
+                align-items: center;
+            }
+            
+            .step {
+                width: 100%;
+                max-width: 200px;
+            }
+            
+            .digit-grid {
+                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            }
+            
+            .bbox-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .formatted-reading {
+                padding: 20px;
+            }
+            
+            .formatted-reading h2 {
+                font-size: 1.5rem;
+            }
+            
+            .formatted-reading .mileage {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .header-section {
+                padding: 20px;
+            }
+            
+            .header-section h1 {
+                font-size: 1.5rem;
+            }
+            
+            .btn-custom, .btn-secondary-custom {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            
+            .result-card {
+                padding: 15px;
+            }
+            
+            .result-card h3 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loader"></div>
+        <div class="ms-3">Processing...</div>
+    </div>
+    
+    <!-- Toast Notification -->
+    <div class="toast alert alert-success" id="successToast" role="alert">
+        <div class="d-flex align-items-center">
+            <i class="fas fa-check-circle me-2"></i>
+            <span>Operation completed successfully!</span>
+        </div>
+    </div>
+    
+    <div class="results-container">
+        <!-- Header Section -->
+        <div class="header-section">
+            <h1><i class="fas fa-tachometer-alt me-3"></i>Odometer Reading Results</h1>
+            <div class="subtitle">
+                Uploaded: <strong>{{ results.filename }}</strong> | 
+                Processed: <strong>{{ results.timestamp }}</strong>
+            </div>
+            
+            {% if results.overall_success %}
+                <div class="success-badge">
+                    <i class="fas fa-check-circle me-2"></i>SUCCESS: All pipeline steps completed
+                </div>
+            {% else %}
+                <div class="warning-badge">
+                    <i class="fas fa-exclamation-triangle me-2"></i>PARTIAL SUCCESS: Some issues detected
+                </div>
+            {% endif %}
+            
+            {% if results.reading and results.reading.method == 'digit_detector' %}
+                <div class="digit-detector-badge">
+                    <i class="fas fa-robot me-2"></i>AI DIGIT DETECTOR USED
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Overall Reading Display -->
+            {% if results.reading and results.reading.value %}
+            <div class="formatted-reading">
+                <h2><i class="fas fa-road me-2"></i>Detected Odometer Reading</h2>
+                <div class="mileage" id="mileageDisplay">
+                    {% if results.reading.formatted %}
+                        {{ results.reading.formatted }}
+                    {% else %}
+                        {{ results.reading.value }}
+                    {% endif %}
+                </div>
+                <div class="timestamp">
+                    Confidence: <strong>{{ "%.1f"|format(results.reading.confidence) }}%</strong> | 
+                    Method: 
+                    <span class="method-badge method-{{ results.reading.method }}">
+                        {{ results.reading.method|upper }}
+                    </span>
+                    {% if results.reading.digit_count %}
+                    | Digits: <strong>{{ results.reading.digit_count }}</strong>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Pipeline Steps -->
+            <div class="pipeline-steps">
+                <div class="step {% if 'classification' in results.pipeline_steps %}completed{% else %}active{% endif %}">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Classification</div>
+                </div>
+                <div class="step {% if 'detection' in results.pipeline_steps %}completed{% elif 'classification' in results.pipeline_steps %}active{% endif %}">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Detection</div>
+                </div>
+                <div class="step {% if 'reading_extraction' in results.pipeline_steps or 'digit_detection' in results.pipeline_steps %}completed{% elif 'detection' in results.pipeline_steps %}active{% endif %}">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Reading Extraction</div>
+                </div>
+                <div class="step {% if results.visualization_url %}completed{% elif 'reading_extraction' in results.pipeline_steps or 'digit_detection' in results.pipeline_steps %}active{% endif %}">
+                    <div class="step-number">4</div>
+                    <div class="step-label">Visualization</div>
+                </div>
+            </div>
+            
+            <!-- Error Display -->
+            {% if results.error %}
+            <div class="error-box">
+                <h4><i class="fas fa-exclamation-circle me-2"></i>Processing Error</h4>
+                <p>{{ results.error }}</p>
+            </div>
+            {% endif %}
+            
+            <div class="row">
+                <!-- Left Column: Images -->
+                <div class="col-lg-6">
+                    <div class="image-section mb-4">
+                        <h4><i class="fas fa-image me-2"></i>Original Image</h4>
+                        <img src="{{ results.image_url }}" alt="Uploaded Odometer Image" 
+                             class="img-fluid" id="originalImage"
+                             onerror="this.onerror=null; this.src='https://via.placeholder.com/600x400?text=Image+Not+Found'">
+                        <div class="timestamp mt-2">Original uploaded image</div>
+                    </div>
+                    
+                    {% if results.visualization_url %}
+                    <div class="image-section">
+                        <h4><i class="fas fa-eye me-2"></i>Processed Visualization</h4>
+                        <img src="{{ results.visualization_url }}" alt="Processed Result" 
+                             class="img-fluid" id="processedImage"
+                             onerror="this.onerror=null; this.src='https://via.placeholder.com/600x400?text=Visualization+Failed'">
+                        <div class="timestamp mt-2">Detection box and digit annotations</div>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Right Column: Results -->
+                <div class="col-lg-6">
+                    <!-- Classification Results -->
+                    <div class="result-card">
+                        <h3><i class="fas fa-tag me-2"></i>Classification Result</h3>
+                        
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="icon-circle classification-icon">
+                                {% if results.classification.type == 'Digital' %}
+                                    <i class="fas fa-digital-tachograph"></i>
+                                {% elif results.classification.type == 'Analog' %}
+                                    <i class="fas fa-tachometer-alt"></i>
+                                {% else %}
+                                    <i class="fas fa-question-circle"></i>
+                                {% endif %}
+                            </div>
+                            <div class="ms-3">
+                                <h4 class="mb-1">Type: <strong>{{ results.classification.type }}</strong></h4>
+                                <p class="mb-0 text-muted">Detected odometer type</p>
+                            </div>
+                        </div>
+                        
+                        <div class="confidence-bar">
+                            <div class="confidence-fill" style="width: {{ results.classification.confidence }}%"></div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>Confidence: <strong>{{ "%.1f"|format(results.classification.confidence) }}%</strong></span>
+                            {% if results.classification.confidence > 70 %}
+                                <span class="text-success"><i class="fas fa-check-circle"></i> High Confidence</span>
+                            {% elif results.classification.confidence > 40 %}
+                                <span class="text-warning"><i class="fas fa-exclamation-circle"></i> Medium Confidence</span>
+                            {% else %}
+                                <span class="text-danger"><i class="fas fa-times-circle"></i> Low Confidence</span>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mt-3">
+                            <h5>Probability Distribution:</h5>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="d-flex justify-content-between">
+                                        <span>Analog:</span>
+                                        <span><strong>{{ "%.1f"|format(results.classification.probabilities.analog) }}%</strong></span>
+                                    </div>
+                                    <div class="progress progress-thin mb-2">
+                                        <div class="progress-bar bg-info" role="progressbar" 
+                                             style="width: {{ results.classification.probabilities.analog }}%"></div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="d-flex justify-content-between">
+                                        <span>Digital:</span>
+                                        <span><strong>{{ "%.1f"|format(results.classification.probabilities.digital) }}%</strong></span>
+                                    </div>
+                                    <div class="progress progress-thin mb-2">
+                                        <div class="progress-bar bg-success" role="progressbar" 
+                                             style="width: {{ results.classification.probabilities.digital }}%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Detection Results -->
+                    <div class="result-card">
+                        <h3><i class="fas fa-search me-2"></i>Odometer Detection Result</h3>
+                        
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="icon-circle detection-icon">
+                                {% if results.detection.success %}
+                                    <i class="fas fa-check-circle"></i>
+                                {% else %}
+                                    <i class="fas fa-times-circle"></i>
+                                {% endif %}
+                            </div>
+                            <div class="ms-3">
+                                <h4 class="mb-1">
+                                    Status: 
+                                    {% if results.detection.success %}
+                                        <span class="text-success">Odometer Detected</span>
+                                    {% else %}
+                                        <span class="text-warning">Detection Failed</span>
+                                    {% endif %}
+                                </h4>
+                                <p class="mb-0 text-muted">{{ results.detection.message }}</p>
+                            </div>
+                        </div>
+                        
+                        {% if results.detection.success %}
+                        <div class="confidence-bar">
+                            <div class="confidence-fill" style="width: {{ results.detection.confidence }}%"></div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>Confidence: <strong>{{ "%.1f"|format(results.detection.confidence) }}%</strong></span>
+                            {% if results.detection.confidence > 70 %}
+                                <span class="text-success"><i class="fas fa-check-circle"></i> High Confidence</span>
+                            {% elif results.detection.confidence > 40 %}
+                                <span class="text-warning"><i class="fas fa-exclamation-circle"></i> Medium Confidence</span>
+                            {% else %}
+                                <span class="text-danger"><i class="fas fa-times-circle"></i> Low Confidence</span>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mt-3">
+                            <h5>Bounding Box Coordinates:</h5>
+                            <div class="bbox-grid">
+                                <div class="bbox-item">
+                                    <div class="bbox-label">X1</div>
+                                    <div class="bbox-value">{{ results.detection.bbox[0] }}</div>
+                                </div>
+                                <div class="bbox-item">
+                                    <div class="bbox-label">Y1</div>
+                                    <div class="bbox-value">{{ results.detection.bbox[1] }}</div>
+                                </div>
+                                <div class="bbox-item">
+                                    <div class="bbox-label">X2</div>
+                                    <div class="bbox-value">{{ results.detection.bbox[2] }}</div>
+                                </div>
+                                <div class="bbox-item">
+                                    <div class="bbox-label">Y2</div>
+                                    <div class="bbox-value">{{ results.detection.bbox[3] }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Reading Results -->
+                    <div class="result-card">
+                        <h3><i class="fas fa-robot me-2"></i>Reading Extraction Result</h3>
+                        
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="icon-circle digit-icon">
+                                <i class="fas fa-digital-tachograph"></i>
+                            </div>
+                            <div class="ms-3">
+                                <h4 class="mb-1">
+                                    Status: 
+                                    {% if results.reading.success %}
+                                        <span class="text-success">Reading Extracted</span>
+                                    {% else %}
+                                        <span class="text-warning">Extraction Failed</span>
+                                    {% endif %}
+                                </h4>
+                                <p class="mb-0 text-muted">{{ results.reading.message }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="confidence-bar">
+                            <div class="confidence-fill" style="width: {{ results.reading.confidence }}%"></div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>Confidence: <strong>{{ "%.1f"|format(results.reading.confidence) }}%</strong></span>
+                            {% if results.reading.confidence > 70 %}
+                                <span class="text-success"><i class="fas fa-check-circle"></i> High Confidence</span>
+                            {% elif results.reading.confidence > 40 %}
+                                <span class="text-warning"><i class="fas fa-exclamation-circle"></i> Medium Confidence</span>
+                            {% else %}
+                                <span class="text-danger"><i class="fas fa-times-circle"></i> Low Confidence</span>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Detected Digits -->
+                        {% if results.reading.digits and results.reading.digits|length > 0 %}
+                        <div class="mt-3">
+                            <h5>Detected Digits ({{ results.reading.digits|length }}):</h5>
+                            <div class="digit-grid">
+                                {% for digit in results.reading.digits %}
+                                <div class="digit-item {% if digit.confidence > 70 %}high-confidence{% elif digit.confidence > 40 %}medium-confidence{% else %}low-confidence{% endif %}">
+                                    <div class="digit-value">{{ digit.digit }}</div>
+                                    <div class="digit-confidence">{{ "%.1f"|format(digit.confidence) }}%</div>
+                                    <small>Position: {{ loop.index }}</small>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            
+                            <div class="mt-3">
+                                <h6>Reading Assembly:</h6>
+                                <div class="alert alert-light">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-cogs me-2"></i>
+                                        <span>Digits were assembled in order:</span>
+                                    </div>
+                                    <div class="mt-2 text-center">
+                                        <code class="fs-5">
+                                            {% for digit in results.reading.digits %}{{ digit.digit }}{% if not loop.last %} → {% endif %}{% endfor %}
+                                        </code>
+                                        <span class="ms-2">=</span>
+                                        <strong class="ms-2 fs-4">{{ results.reading.value }}</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="alert alert-info mt-3">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Method:</strong> {{ results.reading.method|upper }} 
+                            {% if results.reading.method == 'digit_detector' %}
+                            - AI-powered YOLO digit detector was used for precise digit-by-digit extraction.
+                            {% elif results.reading.method == 'tesseract' %}
+                            - Tesseract OCR engine was used for text extraction.
+                            {% elif results.reading.method == 'contour' %}
+                            - Contour-based digit detection was used.
+                            {% else %}
+                            - Alternative extraction method was used.
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Statistics Summary -->
+            <div class="result-card mt-4">
+                <h3><i class="fas fa-chart-bar me-2"></i>Performance Summary</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="icon-circle" style="background: rgba(52, 152, 219, 0.1); color: #3498db;">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <div class="stat-value">{{ "%.1f"|format(results.classification.confidence) }}%</div>
+                        <div class="stat-label">Classification Confidence</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="icon-circle" style="background: rgba(46, 204, 113, 0.1); color: #2ecc71;">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <div class="stat-value">{{ "%.1f"|format(results.detection.confidence) }}%</div>
+                        <div class="stat-label">Detection Confidence</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="icon-circle" style="background: rgba(255, 107, 107, 0.1); color: #ff6b6b;">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <div class="stat-value">{{ "%.1f"|format(results.reading.confidence) }}%</div>
+                        <div class="stat-label">Reading Confidence</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="icon-circle" style="background: rgba(241, 196, 15, 0.1); color: #f1c40f;">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <div class="stat-value">
+                            {% if results.overall_success %}
+                            <span class="text-success">Success</span>
+                            {% else %}
+                            <span class="text-warning">Partial</span>
+                            {% endif %}
+                        </div>
+                        <div class="stat-label">Overall Status</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="d-flex justify-content-between mt-4 flex-wrap">
+                <div class="mb-3">
+                    <a href="/upload" class="btn btn-secondary-custom me-3 mb-2">
+                        <i class="fas fa-arrow-left me-2"></i>Upload Another Image
+                    </a>
+                    <a href="/" class="btn btn-secondary-custom mb-2">
+                        <i class="fas fa-home me-2"></i>Back to Home
+                    </a>
+                </div>
+                <div class="mb-3">
+                    <button class="btn btn-custom mb-2" onclick="downloadResults()">
+                        <i class="fas fa-download me-2"></i>Download Results
+                    </button>
+                    <button class="btn btn-custom ms-2 mb-2" onclick="copyToClipboard()">
+                        <i class="fas fa-copy me-2"></i>Copy Reading
+                    </button>
+                    <a href="/test_digit_detector" class="btn btn-custom ms-2 mb-2" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24);">
+                        <i class="fas fa-robot me-2"></i>Test Digit Detector
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer-section">
+            <h4><i class="fas fa-tachometer-alt me-2"></i>Odometer Reading System v2.0</h4>
+            <p class="mb-3">Powered by AI Digit Detection Pipeline</p>
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                <a href="/dashboard" class="text-white me-3"><i class="fas fa-chart-line me-1"></i> Dashboard</a>
+                <a href="/health" class="text-white me-3"><i class="fas fa-heartbeat me-1"></i> System Health</a>
+                <a href="/model_info" class="text-white"><i class="fas fa-cogs me-1"></i> Model Info</a>
+            </div>
+            <p class="mt-3 mb-0" style="font-size: 0.9rem; opacity: 0.8;">
+                Processed at {{ results.timestamp }} | Odometer Type: {{ results.classification.type }} | 
+                Method: {{ results.reading.method|upper }} | 
+                Overall Success: {{ results.overall_success }}
+            </p>
+        </div>
+    </div>
+    
+    <script>
+        // Animate elements on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate confidence bars
+            const confidenceBars = document.querySelectorAll('.confidence-fill');
+            confidenceBars.forEach(bar => {
+                const width = bar.style.width;
+                bar.style.width = '0%';
+                setTimeout(() => {
+                    bar.style.width = width;
+                }, 300);
+            });
+            
+            // Animate the reading display
+            const mileageDisplay = document.getElementById('mileageDisplay');
+            if (mileageDisplay) {
+                mileageDisplay.style.opacity = '0';
+                mileageDisplay.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    mileageDisplay.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                    mileageDisplay.style.opacity = '1';
+                    mileageDisplay.style.transform = 'translateY(0)';
+                }, 500);
+            }
+            
+            // Animate digit items
+            const digitItems = document.querySelectorAll('.digit-item');
+            digitItems.forEach((item, index) => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    item.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0)';
+                }, 600 + (index * 100));
+            });
+            
+            // Animate stat items
+            const statItems = document.querySelectorAll('.stat-item');
+            statItems.forEach((item, index) => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    item.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0)';
+                }, 800 + (index * 100));
+            });
+            
+            // Handle image errors
+            document.querySelectorAll('img').forEach(img => {
+                img.addEventListener('error', function() {
+                    this.src = 'https://via.placeholder.com/600x400?text=Image+Not+Found';
+                });
+            });
+            
+            // Show loading when navigating away
+            const links = document.querySelectorAll('a[href]');
+            links.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href !== '#' && !href.startsWith('javascript:') && !href.startsWith('mailto:')) {
+                        document.getElementById('loadingOverlay').style.display = 'flex';
+                    }
+                });
+            });
+            
+            // Hide loading if still showing
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').style.display = 'none';
+            }, 1000);
+        });
+        
+        // Download results as JSON
+        function downloadResults() {
+            try {
+                // Get the results data from the template
+                const reading = document.querySelector('.mileage').textContent;
+                const type = '{{ results.classification.type }}';
+                const classificationConfidence = '{{ "%.1f"|format(results.classification.confidence) }}%';
+                const detectionConfidence = '{{ "%.1f"|format(results.detection.confidence) }}%';
+                const readingConfidence = '{{ "%.1f"|format(results.reading.confidence) }}%';
+                const method = '{{ results.reading.method|upper }}';
+                const timestamp = '{{ results.timestamp }}';
+                const filename = '{{ results.filename }}';
+                
+                const resultsData = {
+                    filename: filename,
+                    timestamp: timestamp,
+                    reading: reading,
+                    type: type,
+                    classification_confidence: classificationConfidence,
+                    detection_confidence: detectionConfidence,
+                    reading_confidence: readingConfidence,
+                    method: method,
+                    overall_success: {{ results.overall_success|tojson|safe }}
+                };
+                
+                const dataStr = JSON.stringify(resultsData, null, 2);
+                const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+                
+                const exportFileDefaultName = `odometer_results_${filename.replace(/\.[^/.]+$/, "")}_{{ results.timestamp|replace(":", "-")|replace(" ", "_") }}.json`;
+                
+                const linkElement = document.createElement('a');
+                linkElement.setAttribute('href', dataUri);
+                linkElement.setAttribute('download', exportFileDefaultName);
+                linkElement.click();
+                
+                showToast('Results downloaded successfully!', 'success');
+            } catch (error) {
+                showToast('Error downloading results: ' + error.message, 'danger');
+            }
+        }
+        
+        // Copy reading to clipboard
+        function copyToClipboard() {
+            try {
+                const reading = document.querySelector('.mileage').textContent;
+                navigator.clipboard.writeText(reading).then(() => {
+                    showToast('Reading copied to clipboard!', 'success');
+                }).catch(err => {
+                    // Fallback method
+                    const textArea = document.createElement('textarea');
+                    textArea.value = reading;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    showToast('Reading copied to clipboard!', 'success');
+                });
+            } catch (error) {
+                showToast('Failed to copy reading: ' + error.message, 'danger');
+            }
+        }
+        
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('successToast');
+            toast.className = `toast alert alert-${type}`;
+            toast.querySelector('span').textContent = message;
+            
+            // Set icon based on type
+            let icon = 'info-circle';
+            if (type === 'success') icon = 'check-circle';
+            if (type === 'warning') icon = 'exclamation-triangle';
+            if (type === 'danger') icon = 'times-circle';
+            
+            toast.querySelector('i').className = `fas fa-${icon} me-2`;
+            
+            // Show toast
+            toast.style.display = 'block';
+            toast.style.animation = 'slideIn 0.3s ease';
+            
+            // Auto hide after 3 seconds
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    toast.style.display = 'none';
+                }, 300);
+            }, 3000);
+        }
+        
+        // Add CSS for animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Print results
+        function printResults() {
+            window.print();
+        }
+        
+        // Share results (if browser supports Web Share API)
+        function shareResults() {
+            if (navigator.share) {
+                const reading = document.querySelector('.mileage').textContent;
+                const type = '{{ results.classification.type }}';
+                const confidence = '{{ "%.1f"|format(results.reading.confidence) }}%';
+                
+                navigator.share({
+                    title: 'Odometer Reading Result',
+                    text: `Odometer Reading: ${reading} (${confidence} confidence)\nType: ${type}`,
+                    url: window.location.href
+                });
+            } else {
+                showToast('Sharing not supported in your browser', 'warning');
+            }
+        }
+    </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

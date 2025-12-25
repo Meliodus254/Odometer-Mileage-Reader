@@ -1,0 +1,6 @@
+train: C:/Users/ZUPLO/Desktop/project/odometer/dataset/images/train
+val: C:/Users/ZUPLO/Desktop/project/odometer/dataset/images/val
+test: C:/Users/ZUPLO/Desktop/project/odometer/dataset/images/test
+
+nc: 1
+names: ['odometer']

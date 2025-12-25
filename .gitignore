@@ -1,0 +1,21 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+.env/
+
+# YOLO outputs & models
+runs/
+models/
+*.pt
+
+# Logs & temp
+*.log
+*.json
+
+# VS Code settings
+.vscode/
