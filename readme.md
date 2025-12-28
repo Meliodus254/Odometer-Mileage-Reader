@@ -1,111 +1,100 @@
-🚗 Odometer Reading System (Hybrid AI Pipeline)
+🚗 ODOMETER READING SYSTEM
 
 An end-to-end AI-powered odometer reading system that automatically classifies odometer type, detects the odometer region, and extracts numeric readings from vehicle images using Deep Learning, YOLO object detection, and OCR fallback methods.
 
+
 This project includes:
 
-A Flask web application for image upload and visualization
+-A Flask web application for image upload and visualization
 
-A multi-stage inference pipeline
+-A multi-stage inference pipeline
 
-YOLO-based training scripts for odometer and digit detection
+-YOLO-based training scripts for odometer and digit detection
 
-Robust fallback mechanisms (OCR + heuristics)
+-Robust fallback mechanisms (OCR + heuristics)
 
-📑 Table of Contents
 
-Overview
 
-System Architecture
-
-Features
-
-Project Structure
-
-Installation
-
-Running the Web App
-
-API Usage
-
-Model Training
-
-Configuration
-
-Evaluation
-
-Troubleshooting
-
-Dependencies
-
-Future Improvements
-
-License
-
-📌 Overview
+📌 OVERVIEW
 
 This system processes an uploaded image and performs the following steps:
 
-Odometer Classification
+-Odometer Classification
+
 Classifies the odometer as Analog or Digital using a CNN (ResNet-based).
 
-Odometer Region Detection
+-Odometer Region Detection
+
 Locates the odometer in the image using YOLO object detection.
 
-Digit Detection & Reading Extraction
+-Digit Detection & Reading Extraction
 
 Primary: YOLO-based digit detection with advanced filtering
 
-Fallback: Tesseract OCR
+-Fallback: Tesseract OCR
 
 Final fallback: heuristic-based estimation
 
 Visualization & Confidence Reporting
+
 Bounding boxes, detected digits, confidence scores, and processing metadata are rendered.
 
-🧠 System Architecture
+
+🧠 SYSTEM ARTITECTURE
+```
 Image Upload
+
      │
+     
      ▼
+     
 Classification (ResNet)
+
      │
      ▼
 Odometer Detection (YOLO)
+
      │
      ▼
 Digit Detection (YOLO)
+
      │
      ├─ Improved Filtering
      ├─ OCR (Tesseract)
      └─ Heuristic Fallback
+
      ▼
 Final Reading + Visualization
+```
 
-✨ Features
 
-Flask-based web UI & REST API
+✨ FEATURES
 
-GPU/CPU auto-detection (PyTorch)
 
-YOLO-based odometer & digit detection
+-Flask-based web UI & REST API
 
-Advanced digit filtering:
+-GPU/CPU auto-detection (PyTorch)
 
-Vertical alignment
+-YOLO-based odometer & digit detection
 
-Height clustering
+-Advanced digit filtering:
 
-Horizontal grouping
+-Vertical alignment
 
-OCR fallback using Tesseract
+-Height clustering
 
-Model health & status endpoints
+-Horizontal grouping
 
-Dashboard for uploaded images
+-OCR fallback using Tesseract
 
-Training, tuning, and evaluation scripts
+-Model health & status endpoints
 
-📁 Project Structure
+-Dashboard for uploaded images
+
+-Training, tuning, and evaluation scripts
+
+📁 PROJECT STRUCTURE
+```
 project_root/
 │
 ├── web_app/
@@ -124,173 +113,115 @@ project_root/
 ├── uploads/                  # Uploaded & processed images
 ├── config.yaml               # Training configuration (optional)
 └── README.md
+```
 
-⚙️ Installation
+⚙️ INSTALLATION
+
 1. Clone the repository
-git clone <your-repo-url>
+
+```
+git clone https://github.com/Meliodus254/Odometer-Mileage-Reader.git
 cd project_root
+```
 
 2. Create a virtual environment (recommended)
+
+```
 python -m venv venv
 source venv/bin/activate   # Linux / macOS
 venv\Scripts\activate      # Windows
+```
+
 
 3. Install dependencies
-pip install -r requirements.txt
 
+```
+pip install -r requirements.txt
+```
 
 Note: ultralytics will be auto-installed by the training script if missing.
 
-▶️ Running the Web App
-python web_app/app.py
 
+▶️ Running the Web App
+
+```
+python web_app/app.py
+```
 
 The server starts at:
 
+```
+
 http://localhost:5000
-
-Available Pages
-
-/ – Home
-
-/upload – Image upload
-
-/dashboard – Upload history & model status
-
-/health – Health check
-
-/model_info – Model metadata
-
-🔌 API Usage
-Process an Image
-
-Endpoint
-
-POST /api/process
+```
 
 
-Form Data
 
-file: image file (jpg, png, jpeg, bmp, webp)
-
-Response
-
-{
-  "classification": { "type": "Digital", "confidence": 92.4 },
-  "detection": { "success": true, "confidence": 87.1 },
-  "reading": {
-    "value": "123456",
-    "confidence": 81.3,
-    "method": "digit_detector_improved"
-  },
-  "overall_success": true
-}
-
-🏋️ Model Training
+🏋️ MODEL TRAINING
 
 Run the interactive training menu:
 
+```
+
 python detection/train_detection.py
+```
 
 Training Options
 
-Train odometer detector (Stage 1)
+-Train odometer detector (Stage 1)
 
-Train digit detector (Stage 2)
+-Train digit detector (Stage 2)
 
-Train both stages
+-Train both stages
 
-Evaluate odometer model
+-Evaluate odometer model
 
-Evaluate digit model
+-Evaluate digit model
 
-Auto-label digit dataset
+-Auto-label digit dataset
 
-Exit
 
-🔧 Configuration
+
+🔧 CONFIGURATION
 
 Optional training config via config.yaml:
 
-detection:
-  epochs: 50
-  batch_size: 16
-  img_size: 640
-  device: "0"
 
-📊 Evaluation
+📊 EVALUATION
 
 After training, models can be evaluated automatically or manually.
 
 Metrics include:
 
-Precision
+-Precision
 
-Recall
+-Recall
 
-mAP@0.5
+-mAP@0.5
 
-mAP@0.5:0.95
+-mAP@0.5:0.95
 
 Evaluation results can be exported as JSON.
 
-🛠 Troubleshooting
 
-YOLO not loading
-
-Ensure ultralytics is installed
-
-Check model paths in app.py
-
-Low digit accuracy
-
-Improve digit dataset quality
-
-Ensure auto-labeling was run
-
-Increase training epochs
-
-Tesseract not working
-
-Install Tesseract OCR
-
-Ensure it’s added to system PATH
-
-📦 Dependencies
-
-Key libraries used:
-
-Python 3.9+
-
-Flask
-
-PyTorch
-
-Torchvision
-
-Ultralytics (YOLO)
-
-OpenCV
-
-NumPy
-
-Pillow
-
-Tesseract OCR (optional)
 
 🚀 Future Improvements
 
-Temporal odometer validation (reading consistency)
 
-Video-based odometer tracking
+-Temporal odometer validation (reading consistency)
 
-Mobile-friendly UI
+-Video-based odometer tracking
 
-Cloud deployment (Docker / AWS)
+-Mobile-friendly UI
 
-Support for analog needle-based readings
+-Cloud deployment (Docker / AWS)
+
+-Support for analog needle-based readings
+
 
 📄 License
 
+
 This project is licensed under the MIT License.
 Feel free to use, modify, and distribute.
+
