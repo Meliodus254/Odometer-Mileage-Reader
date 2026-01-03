@@ -189,6 +189,41 @@ Optional training config via config.yaml:
 
 📊 EVALUATION
 
+DIGIT DETECTOR RESULTS
+
+
+<img width="2250" height="1500" alt="image" src="https://github.com/user-attachments/assets/d69f3138-dfbe-4d3a-9a5d-2bc4579e1d4b" />
+
+<img width="2250" height="1500" alt="image" src="https://github.com/user-attachments/assets/2b913810-859c-47b1-80e8-b3a58d6088a1" />
+
+<img width="2250" height="1500" alt="image" src="https://github.com/user-attachments/assets/71d18505-7bed-4369-82e1-3b62ebadf158" />
+
+<img width="2400" height="1200" alt="image" src="https://github.com/user-attachments/assets/3b02ae42-af46-4229-8fd5-c5e15ade882a" />
+
+<img width="1920" height="824" alt="image" src="https://github.com/user-attachments/assets/7955dcb2-cb0a-487d-bdcf-b15010b04ea4" />
+
+
+ODOMETER DETECTOR RESULTS
+
+
+<img width="2250" height="1500" alt="image" src="https://github.com/user-attachments/assets/a1c2ca3e-03d8-4d15-a115-41fdd7bd7a59" />
+
+<img width="2250" height="1500" alt="image" src="https://github.com/user-attachments/assets/17edf442-3b68-44f9-a79a-0abedf93eeca" />
+
+<img width="2250" height="1500" alt="image" src="https://github.com/user-attachments/assets/0973fc79-672a-4f34-bd5d-35c841777c31" />
+
+<img width="2250" height="1500" alt="image" src="https://github.com/user-attachments/assets/56c8e27f-21c4-4943-86b7-466b08362e61" />
+
+<img width="2400" height="1200" alt="image" src="https://github.com/user-attachments/assets/59ecc7ad-cebc-40cf-97b0-5d09991d89d3" />
+
+<img width="1920" height="1920" alt="image" src="https://github.com/user-attachments/assets/6a84bd0d-effb-42f5-aa77-f10ba64544be" />
+
+<img width="1920" height="1464" alt="image" src="https://github.com/user-attachments/assets/57c14999-b211-49b5-b8ab-59ac22add9f7" />
+
+
+
+
+
 After training, models can be evaluated automatically or manually.
 
 Metrics include:
@@ -224,4 +259,5 @@ Evaluation results can be exported as JSON.
 
 This project is licensed under the MIT License.
 Feel free to use, modify, and distribute.
+
 
